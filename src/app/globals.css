@@ -1,26 +1,162 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+/* Dark mode driven by <html data-theme="dark"> (set by next-themes). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+  Design tokens — the single source of truth.
+  Change a value here and the whole app updates. Components only ever use the
+  semantic utility classes generated below (bg-primary, text-foreground, ...).
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222 47% 11%);
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222 47% 11%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222 47% 11%);
+
+  --primary: hsl(221 83% 53%);
+  --primary-foreground: hsl(0 0% 100%);
+
+  --secondary: hsl(210 40% 96%);
+  --secondary-foreground: hsl(222 47% 11%);
+
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215 16% 47%);
+
+  --accent: hsl(38 92% 50%);            /* amber — auction "ending soon" urgency */
+  --accent-foreground: hsl(222 47% 11%);
+
+  --success: hsl(142 71% 45%);
+  --success-foreground: hsl(0 0% 100%);
+
+  --danger: hsl(0 84% 60%);
+  --danger-foreground: hsl(0 0% 100%);
+
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(221 83% 53%);
+
+  --radius: 0.625rem;
 }
 
+[data-theme="dark"] {
+  --background: hsl(222 47% 8%);
+  --foreground: hsl(210 40% 98%);
+
+  --card: hsl(222 45% 11%);
+  --card-foreground: hsl(210 40% 98%);
+
+  --popover: hsl(222 45% 11%);
+  --popover-foreground: hsl(210 40% 98%);
+
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(222 47% 8%);
+
+  --secondary: hsl(217 33% 17%);
+  --secondary-foreground: hsl(210 40% 98%);
+
+  --muted: hsl(217 33% 17%);
+  --muted-foreground: hsl(215 20% 65%);
+
+  --accent: hsl(38 92% 50%);
+  --accent-foreground: hsl(222 47% 8%);
+
+  --success: hsl(142 69% 45%);
+  --success-foreground: hsl(0 0% 100%);
+
+  --danger: hsl(0 72% 55%);
+  --danger-foreground: hsl(0 0% 100%);
+
+  --border: hsl(217 33% 20%);
+  --input: hsl(217 33% 22%);
+  --ring: hsl(217 91% 60%);
+}
+
+/*
+  Map raw tokens to Tailwind's color system. `@theme inline` makes the
+  generated utilities reference the variables directly, so flipping
+  data-theme re-resolves every color utility without rebuilding.
+*/
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Root font size — change this one value and the whole rem-based app rescales. */
+:root {
+  font-size: 16px;
+}
+
+* {
+  border-color: var(--border);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
+
+/* Thin, theme-aware scrollbars */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 9999px;
+  }
+}
+
+@keyframes pulse-once {
+  0% { background-color: var(--success); color: var(--success-foreground); }
+  100% { background-color: transparent; }
+}
+.animate-bid-bump {
+  animation: pulse-once 1s ease-out;
+}
+
+/* Accordion open/close (Radix sets the content height variable). */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+.animate-accordion-down { animation: accordion-down 0.2s ease-out; }
+.animate-accordion-up { animation: accordion-up 0.2s ease-out; }
