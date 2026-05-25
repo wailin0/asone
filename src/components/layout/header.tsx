@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Plus, Tag } from "lucide-react";
+import { Menu, Tag } from "lucide-react";
 import { api } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,12 +50,6 @@ export function Header() {
         <SearchBar className="mx-1 max-w-xl" />
 
         <div className="flex shrink-0 items-center gap-1">
-          <Button asChild className="hidden sm:inline-flex">
-            <Link href="/sell"><Plus className="size-4" /> Sell</Link>
-          </Button>
-          <Button asChild size="icon" variant="ghost" className="sm:hidden" aria-label="Sell an item">
-            <Link href="/sell"><Plus className="size-5" /></Link>
-          </Button>
           <NotificationsMenu />
           <ThemeToggle />
           <UserMenu />
